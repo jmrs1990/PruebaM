@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba para programadores Web</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- Optional Bootstrap theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Include SmartWizard CSS -->
+    <link href="dist/css/smart_wizard.css" rel="stylesheet" type="text/css"/>
+    <!-- API para Google Maps -->
+    <!-- API KEY: AIzaSyAS2K0ixiZntzp5-XtAHUkttvciD7DVs7g -->
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS2K0ixiZntzp5-XtAHUkttvciD7DVs7g&libraries=places&callback=initMap">
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        
+        <div id="smartwizard">
+            <ul>
+                <li><a href="#step-1">Paso 1<br /><small>Información</small></a></li>
+                <li><a href="#step-2">Paso 2<br /><small>Subir imagen</small></a></li>
+                <li><a href="#step-3">Paso 3<br /><small>Localización</small></a></li>
+                <li><a href="#step-4">Paso 4<br /><small>Resumen</small></a></li>
+            </ul>
+            <!--//////////////////////////////////////////////////////////// Paso 1 //////////////////////////////////////////////////////////////-->
+            <div>
+                <div id="step-1" class="">
+                    <h2>Formulario de información</h2>
+                    <form>
+                      <div class="form-group">
+                        <label for="inputFecha">Fecha*</label>
+                        <input type="text" class="form-control" id="inputFecha" aria-describedby="fechaHelp">
+                        <small id="fechaHelp" class="form-text text-muted">La fecha deberá digitarse con el formato dd/mm/aaa.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputTelefono">Telefono de contacto</label>
+                        <input type="text" class="form-control" id="inputTelefono">
+                        <small id="telefonoHelp" class="form-text text-muted">El teléfono deberá digitarse en formato numérico, sin espacios ni
+                        caracteres especiales (/-) o letras.</small>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputURLcontacto">URL de contacto</label>
+                        <input type="text" class="form-control" id="inputURLcontacto">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputRangoEdad">Rango de edad*</label>
+                        <select multiple class="form-control" id="inputRangoEdad" style="text-align: center;">
+                          <option>Menor de 18</option>
+                          <option>18-35</option>
+                          <option>35-50</option>
+                          <option>50-65</option>
+                          <option>Mayor de 65</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputSexo">Sexo*</label>
+                        <select class="form-control" id="inputSexo" style="text-align: center;">
+                          <option selected>Seleccionar</option>
+                          <option>Masculino</option>
+                          <option>Femenino</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputTitulo">Título*</label>
+                        <input type="text" class="form-control" id="inputTitulo">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputInformacion">Información*</label>
+                        <textarea class="form-control" id="inputInformacion" rows="5"></textarea>
+                      </div>
+                      <small class="form-text text-muted">*Campos obligatorios</small>
+                      <br><br>
+                      <button id="verificar" type="submit" class="btn btn-primary">Verificar información</button>
+                      <button id="Jstringify" type="submit" class="btn btn-success">Mostrar en formato Stringify (JSON)</button>
+                    </form>
+                </div>
+                <!--///////////////////////////////////////////////////////// Paso 2 ////////////////////////////////////////////////////////////-->
+                <div id="step-2" class="">
+                    <h2>Selección de imagen</h2>
+                    <div> 
+                      <form>
+                        <div class="form-group">
+                          <img src="" id="profile-img-tag" width="400px" style="padding-bottom: 2%;" />
+                          <input type="file" class="form-control-file" id="profile-img">
+                          <button id="recortar" class="btn btn-primary" style="display: none; margin-top: 2%";>Recortar</button>
+                        </div>
+                      </form>
+                    </div>
+                </div>
+                <!--///////////////////////////////////////////////////////// Paso 3 ////////////////////////////////////////////////////////////-->
+                <div id="step-3" class="">
+                    <h2>Geolocalización</h2>
+                    <div id="floating-panel" style="margin-bottom: 2%;">
+                      <input id="address" type="textbox" placeholder="Dirección o lugar">
+                      <input id="submit" type="button" value="Buscar">
+                    </div>
+                    <div id="map" style="height: 400px; width: 100%;"></div>
+                    <div style="background-color: black; opacity: 0.8;">
+                      <p style="text-align: center; color: white; font-size: 12px;">
+                        <em>Instrucciones:<br>Agregue marcadores haciendo click en el mapa (sólo habrá un marcador a la vez).
+                        <br>Verifique la latitud y longitud del marcador haciendo click en el mismo.
+                        <br>Utilice la barra de busqueda para encontrar un lugar específico (función de autocompletar disponible)
+                        </em>
+                      </p>  
+                    </div>
+                </div>
+                <!--///////////////////////////////////////////////////////// Paso 4 ////////////////////////////////////////////////////////////-->
+                <div id="step-4" class="">
+                    <h2>Resumen</h2>
+                    <button id="resumir" class="btn btn-success" style="margin-bottom: 2%;">Generar resumen</button>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Información</div>
+                        <table class="table">
+                            <tbody>
+                                <tr> <th>Fecha:</th> <td id="rfecha">Sin definir</td> </tr>
+                                <tr> <th>Teléfono de contacto:</th> <td id="rtelefono">Sin definir</td> </tr>
+                                <tr> <th>URL de contacto:</th> <td id="rURL">Sin definir</td> </tr>
+                                <tr> <th>Rango de edad:</th> <td id="redad">Sin definir</td> </tr>
+                                <tr> <th>Sexo:</th> <td id="rsexo">Sin definir</td> </tr>
+                                <tr> <th>Título:</th> <td id="rtirulo">Sin definir</td> </tr>
+                                <tr> <th>Información:</th> <td id="rinfo">Sin definir</td> </tr>
+                            </tbody>
+                        </table>
+                        <div class="panel-heading">Imagen</div>
+                        <div>
+                          <img id="rImagen" src="" width="250px" alt="Imagen" style="margin-right: auto; margin-left: auto; display: block;">
+                        </div>
+                        <div class="panel-heading">Geolocalización</div>
+                        <div>
+                          <table class="table">
+                              <tbody>
+                                  <tr> <th>Latitud:</th> <td id="rlat">Sin definir</td> </tr>
+                                  <tr> <th>Longitud:</th> <td id="rlon">Sin definir</td> </tr>
+                                  <tr> <th>Dirección:</th> <td id="rdireccion">Sin definir</td> </tr>
+                              </tbody>
+                            </table>    
+                          <div id="rmap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Include SmartWizard JavaScript source -->
+    <script type="text/javascript" src="dist/js/jquery.smartWizard.min.js"></script>
+    <!-- Ruta a js para validación básica de fechas -->    
+    <script type="text/javascript" src="dist/js/validaFecha.js"></script>
+
+    <script type="text/javascript">;
+        //PRIMERA PARTE
+        //Validacion de datos--------------------------------------------------------------------------------------------------
+        //Array para guardar los datos y utilizar en el Paso 4
+        var datosResumen=[];
+        function validaDatos(){
+          var lista = [$("#inputFecha").val(),
+                       $("#inputTelefono").val(),
+                       $("#inputURLcontacto").val(),
+                       $("#inputRangoEdad").val(),
+                       $("#inputSexo").val(),
+                       $("#inputTitulo").val(),
+                       $("#inputInformacion").val()
+                      ];
+          var info = "";
+          if (lista[0]!=="" && !validarFecha(lista[0])) 
+          {
+             info += "La fecha no tiene el formato adecuado o contiene letras\n";
+             datosResumen=[];
+          }
+          if (lista[1]!=="" && isNaN(lista[1])) 
+          {
+             info += "El teléfono no tiene el formato adecuado o contiene letras\n";
+             datosResumen=[]; 
+          }
+          for (var i = lista.length - 1; i >= 0; i--) {
+              if (lista[i]==="Seleccionar") 
+              {
+                info += "Debe seleccionar el sexo, es obligatorio\n";
+                datosResumen=[];
+              }
+              else
+              {
+                if (lista[i]==="" || lista[i]===null) 
+                {
+                  datosResumen=[];
+                  switch(i)
+                  {
+                    case 0:
+                    info += "Debe ingresar la fecha, es obligatorio\n";
+                    break;
+                    case 3:
+                    info += "Debe seleccionar el rango de edad, es obligatorio\n";
+                    break;
+                    case 5:
+                    info += "Debe completar el campo de titulo, es obligatorio\n";
+                    break;
+                    case 6:
+                    info += "Debe completar el campo de información, es obligatorio\n";
+                    break;    
+                  }
+                } 
+              }
+          }
+          if (info==="") 
+          {
+             info = "Información validada correctamente";
+             datosResumen = lista;
+          }
+          return info;
+        }      
+
+        //Datos en stringify
+        function obtenerDatos(){
+            var output;
+            var datos = {fecha:$("#inputFecha").val(),
+                        telefono:$("#inputTelefono").val(),
+                        url:$("#inputURLcontacto").val(),
+                        edad:$("#inputRangoEdad").val(),
+                        sexo: $("#inputSexo").val(),    
+                        titulo:$("#inputTitulo").val(),
+                        informacion:$("#inputInformacion").val()
+                        };    
+            output = JSON.stringify(datos);
+            return output;
+        }
+
+        //Boton para verificacion de datos
+        $("#verificar").on("click", function(){
+          alert(validaDatos());
+        });
+
+        //Boton para mostrar info en stringify
+        $("#Jstringify").on("click", function()
+        {
+          alert(obtenerDatos());
+        });
+        //--------------------------------------------------------------------------------------------------------------------------
+
+
+        //SEGUNDA PARTE
+        //Imagen--------------------------------------------------------------------------------------------------------------------
+        //Carga la imagen y luego modifica el atributo del tag img para renderizar la imagen, tambien renderiza el boton para recortar
+        //la imagen, hasta ahora oculto
+        var rutaResumir; //Para almacenar la ruta de la imagen y utilizar en el Paso 4
+        var anchoResumir; //Para almacenar el ancho (si se modifica la imagen) de la imagen y utilizar en el Paso 4
+        function readURL(input) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  $('#profile-img-tag').attr('src', e.target.result);
+                  rutaResumir = e.target.result;
+                  $('#recortar').css('display', "block");
+              }
+              reader.readAsDataURL(input.files[0]);
+          }
+        }
+        $("#profile-img").change(function(){
+            readURL(this);
+        });
+
+        //Para hacer un resize de la imagen modificando el ancho y manteniendo una relacion de aspecto 1:1
+        $("#recortar").on("click", function(){
+          var ancho = prompt("Digite el ancho deseado para la imagen (en pixeles)\nRecuerde que la relación de imagen es 1:1");
+          if (isNaN(ancho)) {
+            alert("El ancho digitado no es un valor correcto, vuelva a intentarlo");
+          }
+          else
+          {
+            $('#profile-img-tag').attr('width', ancho+"px");
+            anchoResumir = ancho;
+          }
+        });
+        //--------------------------------------------------------------------------------------------------------------------------
+
+
+        //TERCERA PARTE
+        //Array para guardar marcadores y manejador para el evento click
+        var marcadores=[];
+        //Para guardar los datos de lat y long y mostrarlos en un recuadro en el mapa
+        var infowindow;
+        //Para hacer codificar direcciones a lat/lng y viceversa
+        var geocoder;
+
+        //Funcion para renderizar Google Maps, marcadores, infoWindows, entre otras cosas
+        function initMap() {
+          var inicio = {lat: 9.748, lng: -83.753};
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: inicio
+          });
+
+          //Función de autocomplete con la libreria places de la API. Se obtiene la direccion mediante un input
+          //y luego se usa en la función autocomplete para mostrar los resultados
+          var input = document.getElementById('address');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+          autocomplete.bindTo('bounds', map);
+
+          //Se inicializa la funcion de geocode de la API y se dispara con un manejador para eventos click
+          //en el boton de buscar(submit)
+          geocoder = new google.maps.Geocoder();
+          document.getElementById('submit').addEventListener('click', function() {
+            geocodeAddress(geocoder, map);
+          });
+
+          //Manejador de evento click en el mapa; llama a una función que coloca un marcador en el mapa y 
+          //remueve un marcador anterior, si es que existía, sino solo agrega uno nuevo
+          map.addListener('click', function(e) {
+            colocar_reemplazarMarcador(e.latLng, map);
+          });
+
+          //Funcion para colocar un marcador (sino existe) o para reemplazar el que ya existe, mediante el uso del
+          //array marcadores
+          function colocar_reemplazarMarcador(latLng, map) {
+            var marker;
+            //Se renderiza una ventana con la informacion de lat y log
+            infowindow = function()
+            {
+              infowindow = new google.maps.InfoWindow({
+                content: '<p>Localizacion (Lat/Long): ' + marcadores[0].getPosition() + '</p>'
+              });
+              infowindow.open(map, marcadores[0]);
+            } 
+            if (marcadores[0]===undefined || marcadores.length===0) 
+            {
+              marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+              });
+              marcadores.push(marker);
+              marcadores[0].setMap(map);
+              infowindow(marcadores[0]);
+            }
+            else{
+              marcadores[0].setMap(null);
+              marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+              });
+              marcadores.splice(0,1);
+              marcadores.push(marker);
+              infowindow(marcadores[0]);
+            }
+          }
+
+          //Servicio de geocodiificacion: Funcion para obtener los valores de lat/long a partir de una direccion. Se utiliza en
+          //en Paso 3 para poner un marcador en donde se haya indicado en la barra de busqueda
+          function geocodeAddress(geocoder, resultsMap) {
+            var address = document.getElementById('address').value;
+            geocoder.geocode({'address': address}, function(results, status) {
+              if (status === 'OK') {
+                resultsMap.setCenter(results[0].geometry.location);
+                //Con results, a partir de la direccion, se obtienen lat y long que son pasados a la funcion para
+                //agregar (o reemplazar, si ya existe) un marcador
+                colocar_reemplazarMarcador(results[0].geometry.location, map);
+              } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+              }
+            });
+          }
+        }
+
+         //Servicio de geocodiificacion: Funcion para obtener la dirección a partir de un objeto con lat y long. Se utiliza en
+         //el Paso 4 para mostrar la dirección del marcador  
+         function geocodeLatLng(geocoder, marcadores) {
+           var latlng;
+                 latlng = marcadores[0].getPosition().toString();
+                 latlng = latlng.replace("(","");
+                 latlng = latlng.replace(")","");
+                 latlng = latlng.split(",");
+                 latlng[0] = parseFloat(latlng[0]);
+                 latlng[1] = parseFloat(latlng[1]);
+                 latlng = {lat: latlng[0], lng: latlng[1]};
+           geocoder.geocode({'location': latlng}, function(results, status) {
+             if (status === 'OK') {
+               if (results[1]) {
+                 $('#rdireccion').html(results[1].formatted_address);
+               } else {
+                 window.alert('No results found');
+               }
+             } else {
+               $('#rdireccion').html("Sin dirección disponible");
+             }
+          });
+        }
+
+        //Función quitar el cuadro informativo con lat/long del mapa. Se utiliza en el Paso 4
+        function quitarInfoWindow()
+        {
+          if (infowindow) 
+          {
+            infowindow.close();
+          }
+        }
+        //--------------------------------------------------------------------------------------------------------------------------
+
+
+        //CUARTA PARTE
+        //--------------------------------------------------------------------------------------------------------------------------
+        var finish = [];  
+        $("#resumir").on("click", function(){
+          //Verificación de los datos en el Paso 1; si están correctos se renderizan en el resumen (Paso 4)
+          if (validaDatos()==="Información validada correctamente") 
+          {
+            $("#rfecha").html(datosResumen[0]);
+            $("#rtelefono").html((datosResumen[1]!=="")?datosResumen[1]:"Sin especificar");
+            $("#rURL").html((datosResumen[2]!=="")?datosResumen[2]:"Sin especificar");
+            $("#redad").html(datosResumen[3]);
+            $("#rsexo").html(datosResumen[4]);
+            $("#rtirulo").html(datosResumen[5]);
+            $("#rinfo").html(datosResumen[6]);
+            finish[0]=true;
+          }
+          else
+          {
+            alert("Aún no ha completado el Paso 1 o hay datos erróneos en el formulario del mismo.\n"+
+              "Para verificar la validez de los datos del Paso 1 utilice el boton 'Verificar información' al final de la página");
+            finish[0]=false;
+          }
+          
+          //Verificación del Paso 2; si hay una imagen y si tiene una resolución adecuada (menor o igual a 600px), 
+          //se renderiza en el resumen (Paso 4)
+          if (rutaResumir!==undefined) 
+            {
+              $("#rImagen").attr('src', rutaResumir);
+              if (anchoResumir!==undefined) 
+              {
+                if (anchoResumir<=600) 
+                {
+                  $("#rImagen").attr('width', anchoResumir);
+                }
+                else
+                { 
+                  $("#rImagen").attr('alt', "¡La resolución es muy alta!\nVuelva al paso 2 y reduzca el ancho de la imagen a menos de 600px");
+                  $("#rImagen").attr('src', "");
+                }
+              }  
+              finish[1]=true;
+            }
+            else
+            {
+              alert("Aún no ha completado el Paso 2.\nVuelva y elija una imagen");
+              finish[1]=false;
+            }
+
+          //Verificación del Paso 3; si hay un marcador generado con el evento click o bien con la barra de autocompletar, se renderizará el 
+          //mapa correspondiente en el resumen (Paso 4)
+          if (marcadores[0]!==undefined) 
+          {
+            //Función para quitar la ventana de información con lat y long
+            quitarInfoWindow();
+            //Borra el contenido del div que contienen el mapa resumen (Slide 4) y luego clona el contenido del div con el mapa (Slide 3) y lo
+            //agrega al contenido del div con el mapa resumen (Slide 4)
+            $('#rmap').html(""); 
+            $('#map').clone().appendTo("#rmap");
+            var latlong;
+            latlong = marcadores[0].getPosition().toString();
+            latlong = latlong.replace("(","");
+            latlong = latlong.replace(")","");
+            latlong = latlong.split(",");
+            latlong[0] = parseFloat(latlong[0]);
+            latlong[1] = parseFloat(latlong[1]);
+
+            $('#rlat').html(latlong[0].toFixed(4));
+            $('#rlon').html(latlong[1].toFixed(4));
+            geocodeLatLng(geocoder, marcadores);
+            finish[2]=true;
+          }
+          else
+          {
+            alert("Aún no ha completado el Paso 3.\nVuelva y elija una localización");
+            finish[2]=false;
+          }
+        });
+        //--------------------------------------------------------------------------------------------------------------------------
+
+
+        //Al cargar la página; carga el wizard y sus botones; prepara los botones para verificar la informacion y mostrar el 
+        //stringify de los datos introducidos en el formulario (1er slide)
+        $(document).ready(function(){
+            // Step show event 
+            $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+               //alert("You are on step "+stepNumber+" now");
+               if(stepPosition === 'first'){
+                   $("#prev-btn").addClass('disabled');
+               }else if(stepPosition === 'final'){
+                   $("#next-btn").addClass('disabled');
+               }else{
+                   $("#prev-btn").removeClass('disabled');
+                   $("#next-btn").removeClass('disabled');
+               }
+            });
+
+            // Toolbar extra buttons
+            //Primero es necesario hacer click en el boton generar resumen para que verifique que la informacion es 
+            //correcta y luego el boton finish dará la prueba por terminada
+            var btnFinish = $('<button></button>').text('Finish')
+                                             .addClass('btn btn-info')
+                                             .on('click', function(){ 
+                                              if (finish[0]&&finish[1]&&finish[2]) 
+                                              {
+                                                alert('¡Prueba completada!');
+                                              }
+                                              else
+                                              {
+                                                alert('¡Aún faltan pasos por completar!');
+                                              }
+                                             });
+            //Borra todos los datos del formulario (Paso 1) y la tabla resumen del Paso 4
+            var btnCancel = $('<button></button>').text('Cancel')
+                                             .addClass('btn btn-danger')
+                                             .on('click', function(){ 
+                                              $("#inputFecha").val("");
+                                              $("#inputTelefono").val("");
+                                              $("#inputURLcontacto").val("");
+                                              $("#inputRangoEdad").val("Menor de 18");
+                                              $("#inputSexo").val("Seleccionar");
+                                              $("#inputTitulo").val("");
+                                              $("#inputInformacion").val("");
+
+                                              $("#rfecha").html("Sin definir");
+                                              $("#rtelefono").html("Sin definir");
+                                              $("#rURL").html("Sin definir");
+                                              $("#redad").html("Sin definir");
+                                              $("#rsexo").html("Sin definir");
+                                              $("#rtirulo").html("Sin definir");
+                                              $("#rinfo").html("Sin definir");
+
+                                              $("#rImagen").attr('src', "");
+                                              $("#rImagen").attr('width', 250);
+                                              $("#rImagen").attr('alt', "Imagen");
+
+                                              $('#rlat').html("Sin definir");
+                                              $('#rlon').html("Sin definir");
+                                              $('#rdireccion').html("Sin definir");
+                                              $('#rmap').html(""); 
+                                              $('#smartwizard').smartWizard("reset"); 
+                                            });                         
+            
+            // Smart Wizard
+            $('#smartwizard').smartWizard({ 
+                    selected: 0, 
+                    theme: 'default',
+                    transitionEffect:'fade',
+                    showStepURLhash: true,
+                    toolbarSettings: {toolbarPosition: 'both',
+                                      toolbarExtraButtons: [btnFinish, btnCancel]
+                                    }
+            });
+                                         
+            // External Button Events
+            $("#reset-btn").on("click", function() {
+                // Reset wizard
+                $('#smartwizard').smartWizard("reset");
+                return true;
+            });
+            $("#prev-btn").on("click", function() {
+                // Navigate previous
+                $('#smartwizard').smartWizard("prev");
+                return true;
+            });
+            $("#next-btn").on("click", function() {
+                // Navigate next
+                $('#smartwizard').smartWizard("next");
+                return true;  
+            });
+        });   
+    </script>  
+</body>
+</html>
